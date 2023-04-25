@@ -5,9 +5,17 @@ using UnityEngine;
 
 public class Broadcaster : MonoBehaviour
 {
+    Socket socket;
     bool isBroadcasting;
 
     Coroutine broadcastingCoroutineHandle;
+
+    void Start() {
+        socket = new Socket(AddressFamily.InterNetwork,
+        SocketType.Dgram, ProtocolType.Udp);
+        socket.Bind(new IPEndPoint(IPAddress.Any, Constants.BROADCAST_TRANSMITTER_PORT));
+        socket.Connect(new IPEndPoint(IPAddress.Broadcast, Constants.BROADCAST_RECEIVER_PORT));
+    }
 
     public void StartBroadcasting() {
         if (isBroadcasting || broadcastingCoroutineHandle != null) 
@@ -27,15 +35,12 @@ public class Broadcaster : MonoBehaviour
         while (isBroadcasting) {
             BroadcaseSignal();
 
-            yield return new WaitForSeconds(0.1f);
+            yield return new WaitForSeconds(0.5f);
         }
     }
 
     void BroadcaseSignal() {
-        Socket socket = new Socket(AddressFamily.InterNetwork,
-        SocketType.Dgram, ProtocolType.Udp);
-        socket.Bind(new IPEndPoint(IPAddress.Any, Constants.BROADCAST_TRANSMITTER_PORT));
-        socket.Connect(new IPEndPoint(IPAddress.Broadcast, Constants.BROADCAST_RECEIVER_PORT));
+        
         socket.Send(System.Text.ASCIIEncoding.ASCII.GetBytes(Constants.CONNECTION_KEY));
     }
 }

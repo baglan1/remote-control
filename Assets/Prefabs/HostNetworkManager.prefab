@@ -46,7 +46,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 87534816dd12d2946a08c8eabe02962e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  OnConnectedEvent:
+    m_PersistentCalls:
+      m_Calls: []
   broadcaster: {fileID: 3159150552939151373}
+  serverBehavior: {fileID: 3159150552939151372}
 --- !u!114 &3159150552939151372
 MonoBehaviour:
   m_ObjectHideFlags: 0
