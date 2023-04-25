@@ -12,6 +12,7 @@ public class ConnectingView : MonoBehaviour
 
     void OnConnection() {
         commandView.SetActive(true);
+        this.gameObject.SetActive(false);
     }
 
     void OnDisable() {

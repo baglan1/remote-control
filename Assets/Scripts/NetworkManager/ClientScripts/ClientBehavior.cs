@@ -10,6 +10,10 @@ public class ClientBehavior : MonoBehaviour
 
     NetworkDriver m_Driver;
     NetworkConnection m_Connection;
+    bool isConnecting;
+
+    string IpAddress;
+    bool isIpSet;
 
     void Start()
     {
@@ -18,9 +22,21 @@ public class ClientBehavior : MonoBehaviour
     }
 
     public void CreateConnection(string ipAddress) {
-        if (m_Connection != null) return;
+        if (m_Connection != default(NetworkConnection)) return;
+        // if (isConnecting) return;
 
-        IPAddress serverAddress = IPAddress.Parse(ipAddress);
+        isConnecting = true;
+        
+        IpAddress = ipAddress;
+        isIpSet = true;
+    }
+
+    void CheckForCreateConnection() {
+        if (!isIpSet) return;
+
+        Debug.Log("Connect called");
+
+        IPAddress serverAddress = IPAddress.Parse(IpAddress);
         NativeArray<byte> nativeArrayAddress;
         // Convert that into a NativeArray of byte data
         nativeArrayAddress = new NativeArray<byte>(serverAddress.GetAddressBytes().Length, Allocator.Temp);
@@ -30,6 +46,7 @@ public class ClientBehavior : MonoBehaviour
         endpoint.SetRawAddressBytes(nativeArrayAddress);       
         endpoint.Port = Constants.MESSAGE_PORT;
         m_Connection = m_Driver.Connect(endpoint);
+        Debug.Log("Connected");
     }
 
     public void OnDestroy() 
@@ -39,6 +56,9 @@ public class ClientBehavior : MonoBehaviour
 
     void Update() 
     { 
+        CheckForCreateConnection();
+        isIpSet = false;
+
         m_Driver.ScheduleUpdate().Complete();
 
         if (!m_Connection.IsCreated)
@@ -53,7 +73,7 @@ public class ClientBehavior : MonoBehaviour
             if (cmd == NetworkEvent.Type.Connect)
             {
                 OnConnectionEvent.Invoke();
-
+                isConnecting = false;
                 // uint value = 1;
                 // m_Driver.BeginSend(m_Connection, out var writer);
                 // writer.WriteUInt(value);

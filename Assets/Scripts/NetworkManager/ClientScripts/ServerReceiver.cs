@@ -38,8 +38,8 @@ public class ServerReceiver : MonoBehaviour
                 if (recvBuffer != null)
                 {
                     var message = Encoding.UTF8.GetString(recvBuffer);
-                    Debug.Log(message);
-                    Debug.Log($"{from.Address}:{from.Port}");
+                    // Debug.Log(message);
+                    // Debug.Log($"{from.Address}:{from.Port}");
 
                     if (isReceiving) {
                         Authenticate(message, from);
