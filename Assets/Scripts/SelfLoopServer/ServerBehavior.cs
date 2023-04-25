@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class ServerBehavior : MonoBehaviour
 {
+    [SerializeField] BuildLogger logger;
+
     public NetworkDriver m_Driver;
     private NativeList<NetworkConnection> m_Connections;
 
@@ -11,9 +13,12 @@ public class ServerBehavior : MonoBehaviour
     {
         m_Driver = NetworkDriver.Create();
         var endpoint = NetworkEndPoint.AnyIpv4;
-        endpoint.Port = 9000;
-        if (m_Driver.Bind(endpoint) != 0)
-            Debug.Log("Failed to bind to port 9000");
+        endpoint.Port = 8000;
+        if (m_Driver.Bind(endpoint) != 0) {
+            logger.AddText("Failed to bind to port 8000");
+            Debug.Log("Failed to bind to port 8000");
+            
+        }
         else
             m_Driver.Listen();
 
@@ -40,6 +45,7 @@ public class ServerBehavior : MonoBehaviour
         {
             m_Connections.Add(c);
             Debug.Log("Accepted a connection");
+            logger.AddText("Accepted a connection");
         }
 
         DataStreamReader stream;
@@ -55,6 +61,7 @@ public class ServerBehavior : MonoBehaviour
                 {
                     uint number = stream.ReadUInt();
                     Debug.Log("Got " + number + " from the Client adding + 2 to it.");
+                    logger.AddText("Got " + number + " from the Client adding + 2 to it.");
 
                     number +=2;
 
@@ -65,6 +72,7 @@ public class ServerBehavior : MonoBehaviour
                 else if (cmd == NetworkEvent.Type.Disconnect)
                 {
                     Debug.Log("Client disconnected from server");
+                    logger.AddText("Client disconnected from server");
                     m_Connections[i] = default(NetworkConnection);
                 }
             }

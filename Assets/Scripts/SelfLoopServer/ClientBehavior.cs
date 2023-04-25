@@ -6,6 +6,7 @@ using UnityEngine;
 public class ClientBehavior : MonoBehaviour
 {
     [SerializeField] string ServerAddres;
+    [SerializeField] BuildLogger logger;
 
     public NetworkDriver m_Driver;
     public NetworkConnection m_Connection;
@@ -24,7 +25,7 @@ public class ClientBehavior : MonoBehaviour
         // Set to AnyIpv4
         NetworkEndPoint endpoint = NetworkEndPoint.AnyIpv4;
         endpoint.SetRawAddressBytes(nativeArrayAddress);       
-        endpoint.Port = 9000;
+        endpoint.Port = 8000;
         m_Connection = m_Driver.Connect(endpoint);
     }
 
@@ -39,8 +40,10 @@ public class ClientBehavior : MonoBehaviour
 
         if (!m_Connection.IsCreated)
         {
-            if (!Done)
+            if (!Done){
                 Debug.Log("Something went wrong during connect");
+                logger.AddText("Something went wrong during connect");
+            }
             return;
         }
 
@@ -51,6 +54,7 @@ public class ClientBehavior : MonoBehaviour
             if (cmd == NetworkEvent.Type.Connect)
             {
                 Debug.Log("We are now connected to the server");
+                logger.AddText("We are now connected to the server");
 
                 uint value = 1;
                 m_Driver.BeginSend(m_Connection, out var writer);
@@ -61,6 +65,7 @@ public class ClientBehavior : MonoBehaviour
             {
                 uint value = stream.ReadUInt();
                 Debug.Log("Got the value = " + value + " back from the server");
+                logger.AddText("Got the value = " + value + " back from the server");
                 Done = true;
                 m_Connection.Disconnect(m_Driver);
                 m_Connection = default(NetworkConnection);
@@ -68,6 +73,7 @@ public class ClientBehavior : MonoBehaviour
             else if (cmd == NetworkEvent.Type.Disconnect)
             {
                 Debug.Log("Client got disconnected from server");
+                logger.AddText("Client got disconnected from server");
                 m_Connection = default(NetworkConnection);
             }
         }
