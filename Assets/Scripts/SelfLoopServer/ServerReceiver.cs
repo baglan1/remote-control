@@ -1,26 +1,34 @@
-using System;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.Events;
 
+/// <summary>
+/// Client class that receives a broadcasted signal from a server/host.
+/// </summary>
 public class ServerReceiver : MonoBehaviour
 {
-    [SerializeField] int port = 8001;
+    public UnityEvent<IPEndPoint> OnSuccessfulAuthentificationEvent = new UnityEvent<IPEndPoint>();
+
+    bool isReceiving;
     UdpClient udpClient;
+
+    public void SetReceivingState(bool flag) {
+        isReceiving = flag;
+    }
 
     async void Start()
     {
         udpClient = new UdpClient();
-        udpClient.Client.Bind(new IPEndPoint(IPAddress.Any, port));
+        udpClient.Client.Bind(new IPEndPoint(IPAddress.Any, Constants.BROADCAST_RECEIVER_PORT));
 
         await StartTask();
     }
 
     Task StartTask()
     {
-
         var from = new IPEndPoint(0, 0);
         var task = Task.Run(() =>
         {
@@ -29,17 +37,13 @@ public class ServerReceiver : MonoBehaviour
                 var recvBuffer = udpClient.Receive(ref from);
                 if (recvBuffer != null)
                 {
-                    Debug.Log(Encoding.UTF8.GetString(recvBuffer));
+                    var message = Encoding.UTF8.GetString(recvBuffer);
+                    Debug.Log(message);
                     Debug.Log($"{from.Address}:{from.Port}");
 
-                    from.Port = 8003;
-                    udpClient = new UdpClient();
-                    udpClient.Client.Bind(new IPEndPoint(IPAddress.Any, 8009));
-
-                    var msg = Encoding.UTF8.GetBytes("Hello back");
-
-                    // udpClient.Connect(from);
-                    udpClient.Send(msg, msg.Length, from);
+                    if (isReceiving) {
+                        Authenticate(message, from);
+                    }
                 }
                 else
                 {
@@ -49,5 +53,11 @@ public class ServerReceiver : MonoBehaviour
         });
 
         return task;
+    }
+
+    void Authenticate(string code, IPEndPoint endPoint) {
+        if (code == Constants.CONNECTION_KEY) {
+            OnSuccessfulAuthentificationEvent.Invoke(endPoint);
+        }
     }
 }
