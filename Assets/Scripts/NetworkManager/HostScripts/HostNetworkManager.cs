@@ -16,6 +16,10 @@ public class HostNetworkManager : MonoBehaviour
         broadcaster.StopBroadcasting();
     }
 
+    public void SendMessage(NetworkMessage message) {
+        serverBehavior.SendMessage(message);
+    }
+
     void OnConnect() {
         OnConnectedEvent.Invoke();
     }

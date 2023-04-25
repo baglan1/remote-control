@@ -3,6 +3,7 @@ using Newtonsoft.Json;
 
 public class CommandsListMessage : NetworkMessage
 {
+    [JsonProperty]
 	List<Command> commands;
 
     [JsonConstructor]

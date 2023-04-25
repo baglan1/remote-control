@@ -26,6 +26,14 @@ public class MainConnector : MonoBehaviour
     void OnConnection() {
         networkManager.StopBroadcasting();
         statusView.SetSuccessMessage("Connected a new device.");
+
+        Invoke("SendCommandList", 1f);
+    }
+
+    void SendCommandList() {
+        var commandListMsg = new CommandsListMessage(commandList);
+
+        networkManager.SendMessage(commandListMsg);
     }
 
     void CreateCommands() {

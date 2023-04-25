@@ -64,6 +64,7 @@ public class ServerBehavior : MonoBehaviour
                     TypeNameHandling = TypeNameHandling.All
                 };
                 var json = JsonConvert.SerializeObject(msg, jsonSerializerSettings);
+                Debug.Log(json);
                 var bytes = Encoding.UTF8.GetBytes(json);
 
                 NativeArray<byte> nativeArrayBytes;
@@ -73,6 +74,7 @@ public class ServerBehavior : MonoBehaviour
                 m_Driver.BeginSend(NetworkPipeline.Null, m_Connections[i], out var writer);
                 writer.WriteBytes(nativeArrayBytes);
                 m_Driver.EndSend(writer);
+                Debug.Log($"Sent to: {m_Connections[i]}");
             }
 
             // receive messages
