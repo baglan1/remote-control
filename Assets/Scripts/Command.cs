@@ -3,7 +3,9 @@ using Newtonsoft.Json;
 
 public class Command
 {
+    [JsonProperty]
 	string name;
+    [JsonProperty]
     string description;
 
     [JsonIgnore]
