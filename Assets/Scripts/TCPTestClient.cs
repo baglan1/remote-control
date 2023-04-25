@@ -42,7 +42,7 @@ public class TCPTestClient : MonoBehaviour {
 	/// </summary>     
 	private void ListenForData() { 		
 		try { 			
-			socketConnection = new TcpClient("localhost", 8052);  			
+			socketConnection = new TcpClient("10.18.2.89", 8052);  			
 			Byte[] bytes = new Byte[1024];             
 			while (true) { 				
 				// Get a stream object for reading 				
