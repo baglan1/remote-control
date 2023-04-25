@@ -10,6 +10,8 @@ using System.Threading;
 using UnityEngine;
 
 public class TCPTestClient : MonoBehaviour {  	
+	[SerializeField] BuildLogger logger;
+
 	#region private members 	
 	private TcpClient socketConnection; 	
 	private Thread clientReceiveThread; 	
@@ -35,6 +37,7 @@ public class TCPTestClient : MonoBehaviour {
 		} 		
 		catch (Exception e) { 			
 			Debug.Log("On client connect exception " + e); 		
+			logger.AddText("On client connect exception " + e);
 		} 	
 	}  	
 	/// <summary> 	
@@ -42,7 +45,7 @@ public class TCPTestClient : MonoBehaviour {
 	/// </summary>     
 	private void ListenForData() { 		
 		try { 			
-			socketConnection = new TcpClient("10.18.2.89", 8052);  			
+			socketConnection = new TcpClient("10.18.2.68", 8052);  			
 			Byte[] bytes = new Byte[1024];             
 			while (true) { 				
 				// Get a stream object for reading 				
@@ -54,13 +57,15 @@ public class TCPTestClient : MonoBehaviour {
 						Array.Copy(bytes, 0, incommingData, 0, length); 						
 						// Convert byte array to string message. 						
 						string serverMessage = Encoding.ASCII.GetString(incommingData); 						
-						Debug.Log("server message received as: " + serverMessage); 					
+						Debug.Log("server message received as: " + serverMessage); 	
+						logger.AddText("server message received as: " + serverMessage);				
 					} 				
 				} 			
 			}         
 		}         
 		catch (SocketException socketException) {             
-			Debug.Log("Socket exception: " + socketException);         
+			Debug.Log("Socket exception: " + socketException);      
+			logger.AddText("Socket exception: " + socketException);
 		}     
 	}  	
 	/// <summary> 	
@@ -80,10 +85,12 @@ public class TCPTestClient : MonoBehaviour {
 				// Write byte array to socketConnection stream.                 
 				stream.Write(clientMessageAsByteArray, 0, clientMessageAsByteArray.Length);                 
 				Debug.Log("Client sent his message - should be received by server");             
+				logger.AddText("Client sent his message - should be received by server");
 			}         
 		} 		
 		catch (SocketException socketException) {             
 			Debug.Log("Socket exception: " + socketException);         
+			logger.AddText("Socket exception: " + socketException);
 		}     
 	} 
 }

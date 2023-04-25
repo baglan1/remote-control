@@ -11,6 +11,8 @@ using System.Threading;
 using UnityEngine;  
 
 public class TCPTestServer : MonoBehaviour {  	
+	[SerializeField] BuildLogger logger;
+
 	#region private members 	
 	/// <summary> 	
 	/// TCPListener to listen for incomming TCP connection 	
@@ -63,7 +65,8 @@ public class TCPTestServer : MonoBehaviour {
 							Array.Copy(bytes, 0, incommingData, 0, length);  							
 							// Convert byte array to string message. 							
 							string clientMessage = Encoding.ASCII.GetString(incommingData); 							
-							Debug.Log("client message received as: " + clientMessage); 						
+							Debug.Log("client message received as: " + clientMessage); 		
+							logger.AddText("client message received as: " + clientMessage);				
 						} 					
 					} 				
 				} 			
@@ -71,6 +74,7 @@ public class TCPTestServer : MonoBehaviour {
 		} 		
 		catch (SocketException socketException) { 			
 			Debug.Log("SocketException " + socketException.ToString()); 		
+			logger.AddText("SocketException " + socketException.ToString());
 		}     
 	}  	
 	/// <summary> 	
@@ -90,11 +94,13 @@ public class TCPTestServer : MonoBehaviour {
 				byte[] serverMessageAsByteArray = Encoding.ASCII.GetBytes(serverMessage); 				
 				// Write byte array to socketConnection stream.               
 				stream.Write(serverMessageAsByteArray, 0, serverMessageAsByteArray.Length);               
-				Debug.Log("Server sent his message - should be received by client");           
+				Debug.Log("Server sent his message - should be received by client");       
+				logger.AddText("Server sent his message - should be received by client");    
 			}       
 		} 		
 		catch (SocketException socketException) {             
-			Debug.Log("Socket exception: " + socketException);         
+			Debug.Log("Socket exception: " + socketException);      
+			logger.AddText("Socket exception: " + socketException);
 		} 	
 	} 
 }
