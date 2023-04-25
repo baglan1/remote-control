@@ -1,4 +1,5 @@
 using System.Net;
+using System.Text;
 using Unity.Collections;
 using Unity.Networking.Transport;
 using UnityEngine;
@@ -46,7 +47,6 @@ public class ClientBehavior : MonoBehaviour
         endpoint.SetRawAddressBytes(nativeArrayAddress);       
         endpoint.Port = Constants.MESSAGE_PORT;
         m_Connection = m_Driver.Connect(endpoint);
-        Debug.Log("Connected");
     }
 
     public void OnDestroy() 
@@ -81,8 +81,14 @@ public class ClientBehavior : MonoBehaviour
             }
             else if (cmd == NetworkEvent.Type.Data)
             {
-                // uint value = stream.ReadUInt();
+                byte[] recBuffer = new byte[stream.Length];
+                var array = new NativeArray<byte>(recBuffer, Allocator.Temp);
+                stream.ReadBytes(array);
 
+                recBuffer = array.ToArray();
+
+                var jsonStr = Encoding.UTF8.GetString(recBuffer);
+                Debug.Log(jsonStr);
             }
             else if (cmd == NetworkEvent.Type.Disconnect)
             {

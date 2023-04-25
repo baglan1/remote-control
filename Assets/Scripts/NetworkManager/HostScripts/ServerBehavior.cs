@@ -1,3 +1,6 @@
+using System.Collections.Generic;
+using System.Text;
+using Newtonsoft.Json;
 using Unity.Collections;
 using Unity.Networking.Transport;
 using UnityEngine;
@@ -9,6 +12,8 @@ public class ServerBehavior : MonoBehaviour
 
     NetworkDriver m_Driver;
     private NativeList<NetworkConnection> m_Connections;
+
+    Queue<NetworkMessage> sendMessageQueue = new Queue<NetworkMessage>();
 
     void Start()
     {
@@ -52,18 +57,31 @@ public class ServerBehavior : MonoBehaviour
             if (!m_Connections[i].IsCreated)
                 continue;
 
+            // Send messages
+            if (sendMessageQueue.Count > 0) {
+                var msg = sendMessageQueue.Dequeue();
+                var jsonSerializerSettings = new JsonSerializerSettings() { 
+                    TypeNameHandling = TypeNameHandling.All
+                };
+                var json = JsonConvert.SerializeObject(msg, jsonSerializerSettings);
+                var bytes = Encoding.UTF8.GetBytes(json);
+
+                NativeArray<byte> nativeArrayBytes;
+                nativeArrayBytes = new NativeArray<byte>(bytes.Length, Allocator.Temp);
+                nativeArrayBytes.CopyFrom(bytes);
+
+                m_Driver.BeginSend(NetworkPipeline.Null, m_Connections[i], out var writer);
+                writer.WriteBytes(nativeArrayBytes);
+                m_Driver.EndSend(writer);
+            }
+
+            // receive messages
             NetworkEvent.Type cmd;
             while ((cmd = m_Driver.PopEventForConnection(m_Connections[i], out stream)) != NetworkEvent.Type.Empty)
             {
                 if (cmd == NetworkEvent.Type.Data)
                 {
-                    // uint number = stream.ReadUInt();
- 
-                    // number +=2;
-
-                    // m_Driver.BeginSend(NetworkPipeline.Null, m_Connections[i], out var writer);
-                    // writer.WriteUInt(number);
-                    // m_Driver.EndSend(writer);
+                    
                 }
                 else if (cmd == NetworkEvent.Type.Disconnect)
                 {
@@ -72,6 +90,10 @@ public class ServerBehavior : MonoBehaviour
                 }
             }
         }
+    }
+
+    public void SendMessage(NetworkMessage message) {
+        sendMessageQueue.Enqueue(message);
     }
 
     void OnDestroy()
