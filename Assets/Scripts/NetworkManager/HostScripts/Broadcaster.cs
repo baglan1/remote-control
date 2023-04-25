@@ -3,7 +3,7 @@ using System.Net;
 using System.Net.Sockets;
 using UnityEngine;
 
-public class SearchServer : MonoBehaviour
+public class Broadcaster : MonoBehaviour
 {
     bool isBroadcasting;
 

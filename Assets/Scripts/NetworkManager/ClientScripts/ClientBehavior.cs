@@ -61,7 +61,7 @@ public class ClientBehavior : MonoBehaviour
             }
             else if (cmd == NetworkEvent.Type.Data)
             {
-                uint value = stream.ReadUInt();
+                // uint value = stream.ReadUInt();
 
             }
             else if (cmd == NetworkEvent.Type.Disconnect)

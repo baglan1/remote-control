@@ -1,23 +1,22 @@
 using Unity.Collections;
 using Unity.Networking.Transport;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class ServerBehavior : MonoBehaviour
 {
-    [SerializeField] BuildLogger logger;
+    public UnityEvent OnConnectionEvent = new UnityEvent();
 
-    public NetworkDriver m_Driver;
+    NetworkDriver m_Driver;
     private NativeList<NetworkConnection> m_Connections;
 
     void Start()
     {
         m_Driver = NetworkDriver.Create();
         var endpoint = NetworkEndPoint.AnyIpv4;
-        endpoint.Port = 8000;
+        endpoint.Port = Constants.MESSAGE_PORT;
         if (m_Driver.Bind(endpoint) != 0) {
-            logger.AddText("Failed to bind to port 8000");
-            Debug.Log("Failed to bind to port 8000");
-            
+            Debug.Log($"Failed to bind to port {Constants.MESSAGE_PORT}");
         }
         else
             m_Driver.Listen();
@@ -43,9 +42,8 @@ public class ServerBehavior : MonoBehaviour
         NetworkConnection c;
         while ((c = m_Driver.Accept()) != default(NetworkConnection))
         {
+            OnConnectionEvent.Invoke();
             m_Connections.Add(c);
-            Debug.Log("Accepted a connection");
-            logger.AddText("Accepted a connection");
         }
 
         DataStreamReader stream;
@@ -59,20 +57,17 @@ public class ServerBehavior : MonoBehaviour
             {
                 if (cmd == NetworkEvent.Type.Data)
                 {
-                    uint number = stream.ReadUInt();
-                    Debug.Log("Got " + number + " from the Client adding + 2 to it.");
-                    logger.AddText("Got " + number + " from the Client adding + 2 to it.");
+                    // uint number = stream.ReadUInt();
+ 
+                    // number +=2;
 
-                    number +=2;
-
-                    m_Driver.BeginSend(NetworkPipeline.Null, m_Connections[i], out var writer);
-                    writer.WriteUInt(number);
-                    m_Driver.EndSend(writer);
+                    // m_Driver.BeginSend(NetworkPipeline.Null, m_Connections[i], out var writer);
+                    // writer.WriteUInt(number);
+                    // m_Driver.EndSend(writer);
                 }
                 else if (cmd == NetworkEvent.Type.Disconnect)
                 {
                     Debug.Log("Client disconnected from server");
-                    logger.AddText("Client disconnected from server");
                     m_Connections[i] = default(NetworkConnection);
                 }
             }

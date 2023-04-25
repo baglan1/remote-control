@@ -1,13 +1,20 @@
 using System.Net;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class ClientNetworkManager : MonoBehaviour
 {
+    public UnityEvent OnConnectionEvent = new UnityEvent();
+
 	[SerializeField] ServerReceiver serverReceiver;
     [SerializeField] ClientBehavior clientBehavior;
 
     public void LookForConnection() {
         serverReceiver.SetReceivingState(true);
+    }
+
+    public void StopLookingForConnection() {
+        serverReceiver.SetReceivingState(false);
     }
 
     void OnEnable() {
@@ -21,6 +28,7 @@ public class ClientNetworkManager : MonoBehaviour
 
     void OnConnection() {
         serverReceiver.SetReceivingState(false);
+        OnConnectionEvent.Invoke();
     }
 
     void OnDisable() {
