@@ -875,7 +875,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 685a77273ddd6b94b86d8020770aeed2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  counterView: {fileID: 0}
+  counterView: {fileID: 1625160058}
   statusView: {fileID: 1279104763}
   networkManager: {fileID: 1947086914}
 --- !u!4 &1798872443
