@@ -18,11 +18,13 @@ public class MainConnector : MonoBehaviour
 
     void OnEnable() {
         networkManager.OnConnectedEvent.AddListener(OnConnection);
+        networkManager.OnDisconnectEvent.AddListener(OnDisconnect);
         networkManager.OnMessageReceiveEvent.AddListener(OnNetworkMessageReceive);
     }
 
     void OnDisable() {
         networkManager.OnConnectedEvent.RemoveListener(OnConnection);
+        networkManager.OnDisconnectEvent.RemoveListener(OnDisconnect);
         networkManager.OnMessageReceiveEvent.RemoveListener(OnNetworkMessageReceive);
     }
 
