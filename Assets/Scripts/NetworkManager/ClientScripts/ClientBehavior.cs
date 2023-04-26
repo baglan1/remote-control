@@ -90,7 +90,7 @@ public class ClientBehavior : MonoBehaviour
                 var jsonSerializerSettings = new JsonSerializerSettings() { 
                     TypeNameHandling = TypeNameHandling.All
                 };
-                var msg = JsonConvert.DeserializeObject<NetworkMessage>(jsonStr);
+                var msg = JsonConvert.DeserializeObject<NetworkMessage>(jsonStr, jsonSerializerSettings);
                 OnMessageReceiveEvent.Invoke(msg);
             }
             else if (cmd == NetworkEvent.Type.Disconnect)

@@ -14,7 +14,9 @@ public class ClientConnector : MonoBehaviour
     }
 
     void OnNetworkMessageReceive(NetworkMessage message) {
+        Debug.Log("network message received");
         if (message is CommandsListMessage listMessage) {
+            Debug.Log("is Commandlist");
             commandView.ShowCommands(listMessage.Commands);
         }
     }
