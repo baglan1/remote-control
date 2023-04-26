@@ -122,6 +122,7 @@ public class ClientBehavior : MonoBehaviour
     }
 
     public void Disconnect() {
+        m_Driver.Disconnect(m_Connection);
         m_Connection = default(NetworkConnection);
     }
 
