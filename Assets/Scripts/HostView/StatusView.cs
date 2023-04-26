@@ -16,6 +16,7 @@ public class StatusView : MonoBehaviour
         textComp.color = successColor;
         textComp.text = message;
 
+        CancelInvoke("Clear");
         Invoke("Clear", 10f);
     }
 
@@ -23,6 +24,7 @@ public class StatusView : MonoBehaviour
         textComp.color = errorColor;
         textComp.text = message;
 
+        CancelInvoke("Clear");
         Invoke("Clear", 10f);
     }
 

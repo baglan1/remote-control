@@ -499,6 +499,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   textComp: {fileID: 1279104764}
   successColor: {r: 0.08876047, g: 0.6603774, b: 0, a: 1}
+  errorColor: {r: 1, g: 0.13679248, b: 0.13679248, a: 1}
 --- !u!114 &1279104764
 MonoBehaviour:
   m_ObjectHideFlags: 0
