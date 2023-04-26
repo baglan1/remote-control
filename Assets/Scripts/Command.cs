@@ -5,8 +5,23 @@ public class Command
 {
     [JsonProperty]
 	string name;
+
+    [JsonIgnore]
+    public string Name {
+        get {
+            return name;
+        }
+    }
+
     [JsonProperty]
     string description;
+
+    [JsonIgnore]
+    public string Description {
+        get {
+            return description;
+        }
+    }
 
     [JsonIgnore]
     Action action;

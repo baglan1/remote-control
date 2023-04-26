@@ -13,7 +13,10 @@ public class CommandView : MonoBehaviour
         loadingTextComp.gameObject.SetActive(false);
 
         foreach (var comm in commandList) {
-            Instantiate(CommandButtonPrefab, contentRectTr);
+            var btnGo = Instantiate(CommandButtonPrefab, contentRectTr);
+            var commandBtnComp = btnGo.GetComponent<CommandButtonView>();
+
+            commandBtnComp.SetText(comm.Name, comm.Description);
         }
 
         commandsRectTr.gameObject.SetActive(true);
