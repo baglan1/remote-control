@@ -148,13 +148,12 @@ public class ServerBehavior : MonoBehaviour
         endpoint.SetRawAddressBytes(nativeArrayAddress);       
         endpoint.Port = Constants.MESSAGE_PORT;
         
-        for (int i = 0; i < m_Connections.Length; i++)
-        {
-            if (!m_Connections[i].IsCreated) {
-                m_Connections[i] = m_Driver.Connect(endpoint);
-                break;
-            }
+        if (m_Connections.Length < m_Connections.Capacity) {
+            m_Connections.Add(m_Driver.Connect(endpoint));
+            OnConnectionEvent.Invoke();
+            Debug.Log("Connection set");
         }
+
         isIpSet = false;
     }
 }
