@@ -67,6 +67,7 @@ public class ClientBehavior : MonoBehaviour
         {
             OnConnectionEvent.Invoke();
             m_Connection = c;
+            Debug.Log("Connection is set");
         }
 
         if (!m_Connection.IsCreated)

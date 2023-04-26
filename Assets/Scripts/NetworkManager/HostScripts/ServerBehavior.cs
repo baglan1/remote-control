@@ -37,7 +37,6 @@ public class ServerBehavior : MonoBehaviour
     void Update()
     {
         CheckForCreateConnection();
-        isIpSet = false;
 
         m_Driver.ScheduleUpdate().Complete();
 
@@ -128,6 +127,7 @@ public class ServerBehavior : MonoBehaviour
 
     public void CreateConnection(string ipAddress) {
         // TODO: check if connection to ipAddress exists
+        if (isIpSet) return;
         
         IpAddress = ipAddress;
         isIpSet = true;
@@ -155,5 +155,6 @@ public class ServerBehavior : MonoBehaviour
                 break;
             }
         }
+        isIpSet = false;
     }
 }

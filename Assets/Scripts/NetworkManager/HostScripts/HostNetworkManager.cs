@@ -47,5 +47,6 @@ public class HostNetworkManager : MonoBehaviour
 
     void OnSuccessfulAuthentification(IPEndPoint endPoint) {
         serverBehavior.CreateConnection(endPoint.Address.ToString());
+        Debug.Log($"Succesfull auth from {endPoint.Address.ToString()}");
     }
 }
