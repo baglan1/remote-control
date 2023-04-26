@@ -9,6 +9,7 @@ using UnityEngine.Events;
 public class ServerBehavior : MonoBehaviour
 {
     public UnityEvent OnConnectionEvent = new UnityEvent();
+    public UnityEvent OnDisconnectEvent = new UnityEvent();
     public UnityEvent<NetworkMessage> OnMessageReceiveEvent = new UnityEvent<NetworkMessage>();
 
     NetworkDriver m_Driver;
@@ -100,6 +101,7 @@ public class ServerBehavior : MonoBehaviour
                 {
                     Debug.Log("Client disconnected from server");
                     m_Connections[i] = default(NetworkConnection);
+                    OnDisconnectEvent.Invoke();
                 }
             }
         }

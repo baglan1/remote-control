@@ -33,6 +33,11 @@ public class MainConnector : MonoBehaviour
         Invoke("SendCommandList", 1f);
     }
 
+    void OnDisconnect() {
+        networkManager.StartBroadcasting();
+        statusView.SetSuccessMessage("Device is disconnected.");
+    }
+
     void SendCommandList() {
         var commandListMsg = new CommandsListMessage(commandList);
 
