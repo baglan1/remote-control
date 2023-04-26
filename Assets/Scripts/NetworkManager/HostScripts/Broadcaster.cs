@@ -10,9 +10,9 @@ public class Broadcaster : MonoBehaviour
 
     Coroutine broadcastingCoroutineHandle;
 
-    void Start() {
+    void Awake() {
         socket = new Socket(AddressFamily.InterNetwork,
-        SocketType.Dgram, ProtocolType.Udp);
+            SocketType.Dgram, ProtocolType.Udp);
         socket.Bind(new IPEndPoint(IPAddress.Any, Constants.BROADCAST_TRANSMITTER_PORT));
         socket.Connect(new IPEndPoint(IPAddress.Broadcast, Constants.BROADCAST_RECEIVER_PORT));
     }
