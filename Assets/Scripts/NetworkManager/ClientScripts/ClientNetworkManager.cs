@@ -5,6 +5,7 @@ using UnityEngine.Events;
 public class ClientNetworkManager : MonoBehaviour
 {
     public UnityEvent OnConnectionEvent = new UnityEvent();
+    public UnityEvent<NetworkMessage> OnMessageReceiveEvent = new UnityEvent<NetworkMessage>();
 
 	[SerializeField] ServerReceiver serverReceiver;
     [SerializeField] ClientBehavior clientBehavior;
@@ -20,6 +21,7 @@ public class ClientNetworkManager : MonoBehaviour
     void OnEnable() {
         serverReceiver.OnSuccessfulAuthentificationEvent.AddListener(OnSuccessfulAuthentification);
         clientBehavior.OnConnectionEvent.AddListener(OnConnection);
+        clientBehavior.OnMessageReceiveEvent.AddListener(OnMessageReceive);
     }
 
     void OnSuccessfulAuthentification(IPEndPoint endpoint) {
@@ -31,8 +33,13 @@ public class ClientNetworkManager : MonoBehaviour
         OnConnectionEvent.Invoke();
     }
 
+    void OnMessageReceive(NetworkMessage message) {
+        OnMessageReceiveEvent.Invoke(message);
+    }
+
     void OnDisable() {
         serverReceiver.OnSuccessfulAuthentificationEvent.RemoveListener(OnSuccessfulAuthentification);
         clientBehavior.OnConnectionEvent.RemoveListener(OnConnection);
+        clientBehavior.OnMessageReceiveEvent.RemoveListener(OnMessageReceive);
     }
 }

@@ -1,5 +1,6 @@
 using System.Net;
 using System.Text;
+using Newtonsoft.Json;
 using Unity.Collections;
 using Unity.Networking.Transport;
 using UnityEngine;
@@ -8,10 +9,10 @@ using UnityEngine.Events;
 public class ClientBehavior : MonoBehaviour
 {
     public UnityEvent OnConnectionEvent = new UnityEvent();
+    public UnityEvent<NetworkMessage> OnMessageReceiveEvent = new UnityEvent<NetworkMessage>();
 
     NetworkDriver m_Driver;
     NetworkConnection m_Connection;
-    bool isConnecting;
 
     string IpAddress;
     bool isIpSet;
@@ -24,9 +25,6 @@ public class ClientBehavior : MonoBehaviour
 
     public void CreateConnection(string ipAddress) {
         if (m_Connection != default(NetworkConnection)) return;
-        // if (isConnecting) return;
-
-        isConnecting = true;
         
         IpAddress = ipAddress;
         isIpSet = true;
@@ -73,7 +71,7 @@ public class ClientBehavior : MonoBehaviour
             if (cmd == NetworkEvent.Type.Connect)
             {
                 OnConnectionEvent.Invoke();
-                isConnecting = false;
+
                 // uint value = 1;
                 // m_Driver.BeginSend(m_Connection, out var writer);
                 // writer.WriteUInt(value);
@@ -88,7 +86,12 @@ public class ClientBehavior : MonoBehaviour
                 recBuffer = array.ToArray();
 
                 var jsonStr = Encoding.UTF8.GetString(recBuffer);
-                Debug.Log(jsonStr);
+
+                var jsonSerializerSettings = new JsonSerializerSettings() { 
+                    TypeNameHandling = TypeNameHandling.All
+                };
+                var msg = JsonConvert.DeserializeObject<NetworkMessage>(jsonStr);
+                OnMessageReceiveEvent.Invoke(msg);
             }
             else if (cmd == NetworkEvent.Type.Disconnect)
             {
