@@ -22,6 +22,8 @@ public class CommandView : MonoBehaviour
     Dictionary<CommandButtonView, Command> btnCommandDict;
 
 	public void ShowCommands(List<Command> commandList) {
+        ClearCommands();
+
         loadingTextComp.gameObject.SetActive(false);
 
         btnCommandDict = new Dictionary<CommandButtonView, Command>();
@@ -39,6 +41,15 @@ public class CommandView : MonoBehaviour
         }
 
         commandsRectTr.gameObject.SetActive(true);
+    }
+
+    void ClearCommands() {
+        if (btnCommandDict == null) return;
+
+        var btnViews = btnCommandDict.Keys;
+        foreach(var btnView in btnViews) {
+            Destroy(btnView.gameObject);
+        }
     }
 
     void OnBtnClick(Command command) {

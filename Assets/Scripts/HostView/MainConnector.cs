@@ -37,7 +37,7 @@ public class MainConnector : MonoBehaviour
 
     void OnDisconnect() {
         networkManager.StartBroadcasting();
-        statusView.SetSuccessMessage("Device is disconnected.");
+        statusView.SetWarningMessage("Device is disconnected.");
     }
 
     void SendCommandList() {
