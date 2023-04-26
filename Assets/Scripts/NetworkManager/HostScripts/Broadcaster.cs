@@ -29,6 +29,7 @@ public class Broadcaster : MonoBehaviour
         isBroadcasting = false;
 
         StopCoroutine(broadcastingCoroutineHandle);
+        broadcastingCoroutineHandle = null;
     }
 
     IEnumerator BroadcastingCoroutine() {
