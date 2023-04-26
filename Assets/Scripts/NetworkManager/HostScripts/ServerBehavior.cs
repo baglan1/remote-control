@@ -89,8 +89,7 @@ public class ServerBehavior : MonoBehaviour
                     recBuffer = array.ToArray();
 
                     var jsonStr = Encoding.UTF8.GetString(recBuffer);
-                    Debug.Log(jsonStr);
-
+                    
                     var jsonSerializerSettings = new JsonSerializerSettings() { 
                         TypeNameHandling = TypeNameHandling.All
                     };

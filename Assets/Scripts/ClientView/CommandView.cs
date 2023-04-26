@@ -10,8 +10,14 @@ public class CommandView : MonoBehaviour
     [SerializeField] RectTransform commandsRectTr;
     [SerializeField] RectTransform contentRectTr;
     [SerializeField] GameObject CommandButtonPrefab;
+    [SerializeField] Button DisconnectButton;
 
     public UnityEvent<Command> SendCommandEvent = new UnityEvent<Command>();
+    public UnityEvent OnDisconnectBtnClick {
+        get {
+            return DisconnectButton.onClick;
+        }
+    }
 
     Dictionary<CommandButtonView, Command> btnCommandDict;
 

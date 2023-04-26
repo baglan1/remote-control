@@ -22,6 +22,10 @@ public class ClientNetworkManager : MonoBehaviour
         clientBehavior.SendMessage(message);
     }
 
+    public void Disconnect() {
+        clientBehavior.Disconnect();
+    }
+
     void OnEnable() {
         serverReceiver.OnSuccessfulAuthentificationEvent.AddListener(OnSuccessfulAuthentification);
         clientBehavior.OnConnectionEvent.AddListener(OnConnection);

@@ -121,6 +121,10 @@ public class ClientBehavior : MonoBehaviour
         }
     }
 
+    public void Disconnect() {
+        m_Connection = default(NetworkConnection);
+    }
+
     public void SendMessage(NetworkMessage message) {
         sendMessageQueue.Enqueue(message);
     }

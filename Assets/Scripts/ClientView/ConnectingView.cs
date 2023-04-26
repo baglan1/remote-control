@@ -16,6 +16,7 @@ public class ConnectingView : MonoBehaviour
     }
 
     void OnDisable() {
+        clientNetworkManager.StopLookingForConnection();
         clientNetworkManager.OnConnectionEvent.RemoveListener(OnConnection);
     }
 }
