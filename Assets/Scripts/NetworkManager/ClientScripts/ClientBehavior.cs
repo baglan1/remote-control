@@ -23,6 +23,13 @@ public class ClientBehavior : MonoBehaviour
     void Start()
     {
         m_Driver = NetworkDriver.Create();
+        var endpoint = NetworkEndPoint.AnyIpv4;
+        endpoint.Port = Constants.MESSAGE_PORT;
+        if (m_Driver.Bind(endpoint) != 0) {
+            Debug.Log($"Failed to bind to port {Constants.MESSAGE_PORT}");
+        }
+        else
+            m_Driver.Listen();
         m_Connection = default(NetworkConnection);
     }
 
