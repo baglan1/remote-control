@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class MainConnector : MonoBehaviour
@@ -17,10 +18,12 @@ public class MainConnector : MonoBehaviour
 
     void OnEnable() {
         networkManager.OnConnectedEvent.AddListener(OnConnection);
+        networkManager.OnMessageReceiveEvent.AddListener(OnNetworkMessageReceive);
     }
 
     void OnDisable() {
         networkManager.OnConnectedEvent.RemoveListener(OnConnection);
+        networkManager.OnMessageReceiveEvent.RemoveListener(OnNetworkMessageReceive);
     }
 
     void OnConnection() {
@@ -46,5 +49,18 @@ public class MainConnector : MonoBehaviour
         var decrCommand = new Command("Decrement", "Decrements the number");
         decrCommand.SetAction(() => counterView.Decrement());
         commandList.Add(decrCommand);
-    }    
+    }  
+
+    void OnNetworkMessageReceive(NetworkMessage message) {
+        if (message is ExecuteCommandMessage executeCommandMessage) {
+            var comm = commandList.FirstOrDefault(x => x.Name == executeCommandMessage.Name);
+
+            if (comm is null) {
+                Debug.Log($"Command {executeCommandMessage.Name} not found.");
+                return;
+            }
+
+            comm.CallAction();
+        }
+    }  
 }

@@ -35,4 +35,8 @@ public class Command
     public void SetAction(Action action) {
         this.action = action;
     }
+
+    public void CallAction() {
+        action.Invoke();
+    }
 }
