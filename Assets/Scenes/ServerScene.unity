@@ -379,6 +379,11 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1199628344 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3159150552939151473, guid: bdcd2471ecc0e8c47a751030bd08b50f, type: 3}
+  m_PrefabInstance: {fileID: 3159150553811185740}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1268654059
 GameObject:
   m_ObjectHideFlags: 0
@@ -899,12 +904,27 @@ MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 3159150552939151374, guid: bdcd2471ecc0e8c47a751030bd08b50f, type: 3}
   m_PrefabInstance: {fileID: 3159150553811185740}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 1199628344}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 87534816dd12d2946a08c8eabe02962e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1947086918
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1199628344}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ecf443315c746d74aba444d54d20ef34, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  OnSuccessfulAuthentificationEvent:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1001 &3159150553811185740
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -912,6 +932,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 3159150552939151374, guid: bdcd2471ecc0e8c47a751030bd08b50f, type: 3}
+      propertyPath: serverReceiver
+      value: 
+      objectReference: {fileID: 1947086918}
     - target: {fileID: 3159150552939151473, guid: bdcd2471ecc0e8c47a751030bd08b50f, type: 3}
       propertyPath: m_Name
       value: HostNetworkManager
@@ -960,5 +984,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 3159150552939151373, guid: bdcd2471ecc0e8c47a751030bd08b50f, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: bdcd2471ecc0e8c47a751030bd08b50f, type: 3}

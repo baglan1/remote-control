@@ -62,6 +62,13 @@ public class ClientBehavior : MonoBehaviour
 
         m_Driver.ScheduleUpdate().Complete();
 
+        NetworkConnection c;
+        while ((c = m_Driver.Accept()) != default(NetworkConnection))
+        {
+            OnConnectionEvent.Invoke();
+            m_Connection = c;
+        }
+
         if (!m_Connection.IsCreated)
         {
             return;
@@ -93,10 +100,7 @@ public class ClientBehavior : MonoBehaviour
             {
                 OnConnectionEvent.Invoke();
 
-                // uint value = 1;
-                // m_Driver.BeginSend(m_Connection, out var writer);
-                // writer.WriteUInt(value);
-                // m_Driver.EndSend(writer);
+                
             }
             else if (cmd == NetworkEvent.Type.Data)
             {

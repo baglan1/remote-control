@@ -11,7 +11,7 @@ public class MainConnector : MonoBehaviour
     List<Command> commandList;
 
     void Start() {
-        networkManager.StartBroadcasting();
+        networkManager.SetReceivingState(true);
 
         CreateCommands();
     }
@@ -29,14 +29,15 @@ public class MainConnector : MonoBehaviour
     }
 
     void OnConnection() {
-        networkManager.StopBroadcasting();
+        networkManager.SetReceivingState(false);
         statusView.SetSuccessMessage("Connected a new device.");
 
         Invoke("SendCommandList", 1f);
     }
 
     void OnDisconnect() {
-        networkManager.StartBroadcasting();
+        networkManager.SetReceivingState(true);
+
         statusView.SetWarningMessage("Device is disconnected.");
     }
 

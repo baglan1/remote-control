@@ -6,7 +6,7 @@ public class ConnectingView : MonoBehaviour
     [SerializeField] GameObject commandView;
 
 	void OnEnable() {
-        clientNetworkManager.LookForConnection();
+        clientNetworkManager.StartBroadcasting();
         clientNetworkManager.OnConnectionEvent.AddListener(OnConnection);
     }
 
@@ -16,7 +16,7 @@ public class ConnectingView : MonoBehaviour
     }
 
     void OnDisable() {
-        clientNetworkManager.StopLookingForConnection();
+        clientNetworkManager.StopBroadcasting();
         clientNetworkManager.OnConnectionEvent.RemoveListener(OnConnection);
     }
 }

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Net;
 using System.Text;
 using Newtonsoft.Json;
 using Unity.Collections;
@@ -14,6 +15,8 @@ public class ServerBehavior : MonoBehaviour
 
     NetworkDriver m_Driver;
     private NativeList<NetworkConnection> m_Connections;
+    string IpAddress;
+    bool isIpSet;
 
     Queue<NetworkMessage> sendMessageQueue = new Queue<NetworkMessage>();
 
@@ -33,6 +36,9 @@ public class ServerBehavior : MonoBehaviour
 
     void Update()
     {
+        CheckForCreateConnection();
+        isIpSet = false;
+
         m_Driver.ScheduleUpdate().Complete();
 
         // Clean up connections
@@ -117,6 +123,37 @@ public class ServerBehavior : MonoBehaviour
         {
             m_Driver.Dispose();
             m_Connections.Dispose();
+        }
+    }
+
+    public void CreateConnection(string ipAddress) {
+        // TODO: check if connection to ipAddress exists
+        
+        IpAddress = ipAddress;
+        isIpSet = true;
+    }
+
+    void CheckForCreateConnection() {
+        if (!isIpSet) return;
+
+        Debug.Log("Connect called");
+
+        IPAddress serverAddress = IPAddress.Parse(IpAddress);
+        NativeArray<byte> nativeArrayAddress;
+        // Convert that into a NativeArray of byte data
+        nativeArrayAddress = new NativeArray<byte>(serverAddress.GetAddressBytes().Length, Allocator.Temp);
+        nativeArrayAddress.CopyFrom(serverAddress.GetAddressBytes());
+        // Set to AnyIpv4
+        NetworkEndPoint endpoint = NetworkEndPoint.AnyIpv4;
+        endpoint.SetRawAddressBytes(nativeArrayAddress);       
+        endpoint.Port = Constants.MESSAGE_PORT;
+        
+        for (int i = 0; i < m_Connections.Length; i++)
+        {
+            if (!m_Connections[i].IsCreated) {
+                m_Connections[i] = m_Driver.Connect(endpoint);
+                break;
+            }
         }
     }
 }

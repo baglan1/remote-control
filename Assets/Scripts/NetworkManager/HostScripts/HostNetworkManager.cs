@@ -1,3 +1,4 @@
+using System.Net;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -7,15 +8,11 @@ public class HostNetworkManager : MonoBehaviour
     public UnityEvent OnDisconnectEvent = new UnityEvent();
     public UnityEvent<NetworkMessage> OnMessageReceiveEvent = new UnityEvent<NetworkMessage>();
 
-	[SerializeField] Broadcaster broadcaster;
+	[SerializeField] ServerReceiver serverReceiver;
     [SerializeField] ServerBehavior serverBehavior;
 
-    public void StartBroadcasting() {
-        broadcaster.StartBroadcasting();
-    }
-
-    public void StopBroadcasting() {
-        broadcaster.StopBroadcasting();
+    public void SetReceivingState(bool flag) {
+        serverReceiver.SetReceivingState(flag);
     }
 
     public void SendMessage(NetworkMessage message) {
@@ -35,14 +32,20 @@ public class HostNetworkManager : MonoBehaviour
     }
 
     void OnEnable() {
+        serverReceiver.OnSuccessfulAuthentificationEvent.AddListener(OnSuccessfulAuthentification);
         serverBehavior.OnConnectionEvent.AddListener(OnConnect);
         serverBehavior.OnDisconnectEvent.AddListener(OnDisconnect);
         serverBehavior.OnMessageReceiveEvent.AddListener(OnMessageReceive);
     }
 
     void OnDisable() {
+        serverReceiver.OnSuccessfulAuthentificationEvent.RemoveListener(OnSuccessfulAuthentification);
         serverBehavior.OnConnectionEvent.RemoveListener(OnConnect);
         serverBehavior.OnDisconnectEvent.RemoveListener(OnDisconnect);
         serverBehavior.OnMessageReceiveEvent.RemoveListener(OnMessageReceive);
+    }
+
+    void OnSuccessfulAuthentification(IPEndPoint endPoint) {
+        serverBehavior.CreateConnection(endPoint.Address.ToString());
     }
 }
