@@ -18,6 +18,10 @@ public class ClientNetworkManager : MonoBehaviour
         serverReceiver.SetReceivingState(false);
     }
 
+    public void SendMessage(NetworkMessage message) {
+        clientBehavior.SendMessage(message);
+    }
+
     void OnEnable() {
         serverReceiver.OnSuccessfulAuthentificationEvent.AddListener(OnSuccessfulAuthentification);
         clientBehavior.OnConnectionEvent.AddListener(OnConnection);

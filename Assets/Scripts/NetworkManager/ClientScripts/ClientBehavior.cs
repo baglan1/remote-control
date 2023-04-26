@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Net;
 using System.Text;
 using Newtonsoft.Json;
@@ -16,6 +17,8 @@ public class ClientBehavior : MonoBehaviour
 
     string IpAddress;
     bool isIpSet;
+
+    Queue<NetworkMessage> sendMessageQueue = new Queue<NetworkMessage>();
 
     void Start()
     {
@@ -64,6 +67,24 @@ public class ClientBehavior : MonoBehaviour
             return;
         }
 
+        // Send messages
+        if (sendMessageQueue.Count > 0) {
+            var msg = sendMessageQueue.Dequeue();
+            var jsonSerializerSettings = new JsonSerializerSettings() { 
+                TypeNameHandling = TypeNameHandling.All
+            };
+            var json = JsonConvert.SerializeObject(msg, jsonSerializerSettings);
+            var bytes = Encoding.UTF8.GetBytes(json);
+
+            NativeArray<byte> nativeArrayBytes;
+            nativeArrayBytes = new NativeArray<byte>(bytes.Length, Allocator.Temp);
+            nativeArrayBytes.CopyFrom(bytes);
+
+            m_Driver.BeginSend(NetworkPipeline.Null, m_Connection, out var writer);
+            writer.WriteBytes(nativeArrayBytes);
+            m_Driver.EndSend(writer);
+        }
+
         DataStreamReader stream;
         NetworkEvent.Type cmd;
         while ((cmd = m_Connection.PopEvent(m_Driver, out stream)) != NetworkEvent.Type.Empty)
@@ -98,5 +119,9 @@ public class ClientBehavior : MonoBehaviour
                 m_Connection = default(NetworkConnection);
             }
         }
+    }
+
+    public void SendMessage(NetworkMessage message) {
+        sendMessageQueue.Enqueue(message);
     }
 }
